@@ -5,7 +5,7 @@ export const getUsers = async () => {
         "apiKey": "yesokmybro"
       }
     });
-    return res.json();
+    return await res.json();
   } catch (err) {
     console.log(err);
   }
