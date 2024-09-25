@@ -28,19 +28,20 @@ type Vehicle = {
 };
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const users: User[] = await getUsers();
+  const [users, ipAddress] = await Promise.all([
+    getUsers(),
+    getClientIPAddress(request),
+  ]);
 
-
-  const ipAddress = getClientIPAddress(request);
-  return json({ ipAddress, users });
+  return json({ users, ipAddress });
 };
 
 export default function Index() {
-  const { ipAddress, users } = useLoaderData<typeof loader>();
+  const { users, ipAddress } = useLoaderData<typeof loader>();
 
   return (
-    <div className="grid grid-cols-4 gap-6 max-w-screen-lg w-full p-12 mx-auto">
-      {users?.map((user, idx) => (
+    <div className="grid grid-cols-1 gap-6 max-w-screen-lg w-full p-12 mx-auto md:grid-cols-4">
+      {users?.map((user: User, idx: string) => (
         <div
           key={idx}
           className="flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700"
@@ -62,6 +63,15 @@ export default function Index() {
         </div>
       ))}
       {ipAddress ?? <p>{ipAddress}</p>}
+      <video
+        src="https://kong.wcydtt.co/moodeng/moodeng"
+        controls
+        muted
+        autoPlay
+        loop
+      >
+        <track default kind="captions" />
+      </video>
     </div>
   );
 }
